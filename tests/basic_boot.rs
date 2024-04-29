@@ -4,31 +4,20 @@
 #![test_runner(john_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-
 use core::panic::PanicInfo;
-use john_os::println;
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Hello, John!");
+	test_main();
 
-    #[cfg(test)]
-    test_main();
-
-    loop {}
+	loop {}
 }
 
-#[cfg(not(test))]
+fn test_runner(tests: &[&dyn Fn()]) {
+	unimplemented!();
+}
+
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
-
-    loop {}
+	john_os::test_panic_handler(info)
 }
-
-#[cfg(test)]
-#[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
-    john_os::test_panic_handler(info)
-}
-
