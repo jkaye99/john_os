@@ -6,18 +6,21 @@
 
 use core::panic::PanicInfo;
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
-	test_main();
+use john_os::println;
 
-	loop {}
+#[test_case]
+fn test_println() {
+    println!("test_println output");
 }
 
-fn test_runner(tests: &[&dyn Fn()]) {
-	unimplemented!();
+#[no_mangle]
+pub extern "C" fn _start() -> ! {
+    test_main();
+
+    loop {}
 }
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-	john_os::test_panic_handler(info)
+    john_os::test_panic_handler(info)
 }

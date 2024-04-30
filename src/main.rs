@@ -4,7 +4,6 @@
 #![test_runner(john_os::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-
 use core::panic::PanicInfo;
 use john_os::println;
 
@@ -31,4 +30,3 @@ fn panic(info: &PanicInfo) -> ! {
 fn panic(info: &PanicInfo) -> ! {
     john_os::test_panic_handler(info)
 }
-
