@@ -16,7 +16,8 @@ pub extern "C" fn _start() -> ! {
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+    john_os::hlt_loop();
 }
 
 #[cfg(not(test))]
@@ -24,7 +25,7 @@ pub extern "C" fn _start() -> ! {
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
 
-    loop {}
+    john_os::hlt_loop();
 }
 
 #[cfg(test)]
