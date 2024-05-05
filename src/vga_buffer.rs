@@ -1,4 +1,6 @@
 use core::fmt;
+use lazy_static::lazy_static;
+use spin::Mutex;
 use volatile::Volatile;
 
 #[allow(dead_code)]
@@ -49,17 +51,15 @@ struct Buffer {
 }
 
 pub struct Writer {
+    row_position: usize,
     column_position: usize,
     color_code: ColorCode,
     buffer: &'static mut Buffer,
 }
 
-use lazy_static::lazy_static;
-use spin::Mutex;
-use x86_64::structures::idt::InterruptDescriptorTable;
-
 lazy_static! {
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
+        row_position: BUFFER_HEIGHT - 1,
         column_position: 0,
         color_code: ColorCode::new(Color::Pink, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
@@ -82,7 +82,7 @@ impl Writer {
                     self.new_line();
                 }
 
-                let row = BUFFER_HEIGHT - 1;
+                let row = self.row_position;
                 let col = self.column_position;
 
                 let color_code = self.color_code;
@@ -104,6 +104,19 @@ impl Writer {
         }
     }
 
+    pub fn backspace(&mut self) {
+        if self.column_position > 0 {
+            self.column_position -= 1;
+        } else {
+            self.column_position = BUFFER_WIDTH - 1;
+            if self.row_position > 0 {
+                self.row_position -= 1;
+            }
+        }
+
+        self.clear_char(self.row_position, self.column_position);
+    }
+
     fn new_line(&mut self) {
         for row in 1..BUFFER_HEIGHT {
             for col in 0..BUFFER_WIDTH {
@@ -113,6 +126,15 @@ impl Writer {
         }
         self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
+    }
+
+    fn clear_char(&mut self, row_position: usize, column_position: usize) {
+        let blank = ScreenChar {
+            ascii_character: b' ',
+            color_code: self.color_code,
+        };
+
+        self.buffer.chars[row_position][column_position].write(blank);
     }
 
     fn clear_row(&mut self, row: usize) {
