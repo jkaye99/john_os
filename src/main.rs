@@ -28,16 +28,20 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     allocator::init_heap(&mut mapper, &mut frame_allocator).expect("heap initialization failed");
 
     let heap_string = String::from("heap allocated string");
-    println!("heap string at {:p}", heap_string.as_str());
+    println!(
+        "heap string \'{}\' at {:p}",
+        heap_string,
+        heap_string.as_str()
+    );
 
     let heap_value = Box::new(41);
-    println!("heap value at {:p}", heap_value);
+    println!("heap value {} at {:p}", *heap_value, heap_value);
 
     let mut vec = Vec::new();
     for i in 0..500 {
         vec.push(i);
     }
-    println!("vec at {:p}", vec.as_slice());
+    println!("vec with len {} at {:p}", vec.len(), vec.as_slice());
 
     let ref_counted = Rc::new(vec![1, 2, 3]);
     let cloned_ref = ref_counted.clone();

@@ -1,5 +1,5 @@
-use alloc::alloc::{GlobalAlloc, Layout};
-use core::ptr::null_mut;
+// use alloc::alloc::{GlobalAlloc, Layout};
+// use core::ptr::null_mut;
 use x86_64::{
     structures::paging::{
         mapper::MapToError, FrameAllocator, Mapper, Page, PageTableFlags, Size4KiB,
@@ -9,7 +9,7 @@ use x86_64::{
 
 use linked_list_allocator::LockedHeap;
 
-pub const HEAP_START: usize = 0x4444_4444_0000;
+pub const HEAP_START: *mut u8 = 0x4444_4444_0000 as *mut u8;
 pub const HEAP_SIZE: usize = 100 * 1024;
 
 #[global_allocator]

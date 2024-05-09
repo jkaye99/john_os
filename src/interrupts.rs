@@ -95,7 +95,8 @@ extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: InterruptStac
                     })
                 }
                 DecodedKey::Unicode(character) => print!("{}", character),
-                DecodedKey::RawKey(key) => (),
+                // DecodedKey::RawKey(key) => (),
+                _ => (),
             }
         }
     }
