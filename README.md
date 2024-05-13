@@ -3,9 +3,9 @@
 ### Required Dependencies:
 
 <span>
-<li>Rust nightly</li>
-<li>bootimage</li>
-<li>llvm-tools</li>
+    <li>Rust nightly</li>
+    <li>bootimage</li>
+    <li>llvm-tools</li>
 
 #### Install Rust via `rustup`:
 
@@ -29,7 +29,7 @@ After installing `bootimage` and `llvm-tools-preview` run `cargo bootimage` to c
 
 #### Running the binary
 
-`cargo run` the will boot the kernel in qemu
+`cargo run` this will boot the kernel in qemu
 
 #### Running Tests
 
