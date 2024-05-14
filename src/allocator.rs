@@ -1,4 +1,5 @@
-use self::bump::BumpAllocator;
+// use self::bump::BumpAllocator;
+use self::linked_list::LinkedListAllocator;
 use x86_64::{
     structures::paging::{
         mapper::MapToError, FrameAllocator, Mapper, Page, PageTableFlags, Size4KiB,
@@ -14,7 +15,8 @@ pub const HEAP_SIZE: usize = 100 * 1024;
 
 #[global_allocator]
 // static ALLOCATOR: LockedHeap = LockedHeap::empty();
-static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+// static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
+static ALLOCATOR: Locked<LinkedListAllocator> = Locked::new(LinkedListAllocator::new());
 
 pub struct Locked<A> {
     inner: spin::Mutex<A>,
